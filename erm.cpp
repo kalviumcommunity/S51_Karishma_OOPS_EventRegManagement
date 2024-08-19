@@ -42,18 +42,9 @@ public:
 
 
 int main(){
-    // Event evnt1;
-    // evnt1.setDate("27-4-2024");
-    // evnt1.setName("karishma");
-    // evnt1.setLocation("conference hall");
-    // evnt1.setEventID("EV01");
 
-    // cout << evnt1.getDate();
-    // cout << evnt1.getName();
-    // cout << evnt1.getLocation();
-    // cout << evnt1.getEventID();
 
-    Event events[2];
+    Event* events = new Event[2];
 
     events[0].setDate("27-4-2024");
     events[0].setName("Karishma's Event");
@@ -73,17 +64,22 @@ int main(){
         cout << "Location: " << events[i].getLocation() << endl;
         cout << endl;
     }
-    
-    Participant par1;
-    par1.setParticipantID("27-4-2024");
-    par1.setName("karishma");
-    par1.registerForEvent();
 
-    cout << par1.getParticipantID();
-    cout << par1.getName();
-    cout << par1.getRegistrationStatus();
+    delete[] events;
 
 
- 
+
+    Participant* par1 = new Participant;
+
+    par1->setParticipantID("P01");
+    par1->setName("Karishma");
+    par1->registerForEvent();
+
+    cout << "Participant ID: " << par1->getParticipantID() << endl;
+    cout << "Name: " << par1->getName() << endl;
+    cout << "Registered: " << (par1->getRegistrationStatus() ? "Yes" : "No") << endl;
+
+    delete par1;
+
     return 0;
 }
