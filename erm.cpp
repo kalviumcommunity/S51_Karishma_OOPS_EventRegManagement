@@ -7,15 +7,15 @@ private:
     string name;
     string date;
     string location;
-    static int totalEvents; // Static variable to count total events
+    static int totalEvents; 
 
 public:
     Event() {
-        totalEvents++; // Increment the totalEvents when an event is created
+        totalEvents++; 
     }
 
     ~Event() {
-        totalEvents--; // Decrement the totalEvents when an event is destroyed
+        totalEvents--; 
     }
 
     void setEventID(const string& id) { this->eventID = id; }
@@ -28,10 +28,10 @@ public:
     string getDate() const { return date; }
     string getLocation() const { return location; }
 
-    static int getTotalEvents() { return totalEvents; } // Static method to get the total number of events
+    static int getTotalEvents() { return totalEvents; } 
 };
 
-// Initialize the static variable
+
 int Event::totalEvents = 0;
 
 class Participant {
@@ -39,7 +39,7 @@ private:
     string participantID;
     string name;
     bool isRegistered;
-    static int totalParticipants; // Static variable to count total registered participants
+    static int totalParticipants; 
 
 public:
     Participant() : isRegistered(false) {}
@@ -50,7 +50,7 @@ public:
     void registerForEvent() {
         if (!isRegistered) {
             isRegistered = true;
-            totalParticipants++; // Increment the totalParticipants when a participant registers
+            totalParticipants++; 
         }
     }
 
@@ -58,10 +58,9 @@ public:
     string getName() const { return name; }
     bool getRegistrationStatus() const { return isRegistered; }
 
-    static int getTotalParticipants() { return totalParticipants; } // Static method to get the total number of registered participants
+    static int getTotalParticipants() { return totalParticipants; } 
 };
 
-// Initialize the static variable
 int Participant::totalParticipants = 0;
 
 int main() {
