@@ -8,15 +8,24 @@ private:
     string date;
     string location;
 
+    static int totalEvents; 
+
+
 public:
     static int eventCount;  // Static variable to count the number of events
 
     Event() {
+
         eventCount++;
     }
 
     ~Event() {
         eventCount--;
+        totalEvents++; 
+    }
+
+    ~Event() {
+        totalEvents--; 
     }
 
     void setEventID(const string& id) { this->eventID = id; }
@@ -33,11 +42,19 @@ public:
 // Initialize static variable
 int Event::eventCount = 0;
 
+    static int getTotalEvents() { return totalEvents; } 
+};
+
+
+int Event::totalEvents = 0;
+
 class Participant {
 private:
     string participantID;
     string name;
     bool isRegistered;
+
+    static int totalParticipants; 
 
 public:
     static int participantCount;  // Static variable to count the number of participants
@@ -52,7 +69,15 @@ public:
 
     void setParticipantID(const string& id) { this->participantID = id; }
     void setName(const string& n) { this->name = n; }
+
     void registerForEvent() { this->isRegistered = true; }
+    
+    void registerForEvent() {
+        if (!isRegistered) {
+            isRegistered = true;
+            totalParticipants++; 
+        }
+    }
 
     string getParticipantID() const { return participantID; }
     string getName() const { return name; }
@@ -61,6 +86,11 @@ public:
 
 // Initialize static variable
 int Participant::participantCount = 0;
+
+    static int getTotalParticipants() { return totalParticipants; } 
+};
+
+int Participant::totalParticipants = 0;
 
 int main() {
     Event* events = new Event[2];
