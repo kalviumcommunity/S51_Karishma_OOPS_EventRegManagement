@@ -1,4 +1,4 @@
-#include <iostream>
+# include <iostream>
 using namespace std;
 
 class Event {
@@ -7,15 +7,16 @@ private:
     string name;
     string date;
     string location;
-    static int totalEvents; // Static variable to count total events
 
 public:
+    static int eventCount;  // Static variable to count the number of events
+
     Event() {
-        totalEvents++; // Increment the totalEvents when an event is created
+        eventCount++;
     }
 
     ~Event() {
-        totalEvents--; // Decrement the totalEvents when an event is destroyed
+        eventCount--;
     }
 
     void setEventID(const string& id) { this->eventID = id; }
@@ -27,42 +28,39 @@ public:
     string getName() const { return name; }
     string getDate() const { return date; }
     string getLocation() const { return location; }
-
-    static int getTotalEvents() { return totalEvents; } // Static method to get the total number of events
 };
 
-// Initialize the static variable
-int Event::totalEvents = 0;
+// Initialize static variable
+int Event::eventCount = 0;
 
 class Participant {
 private:
     string participantID;
     string name;
     bool isRegistered;
-    static int totalParticipants; // Static variable to count total registered participants
 
 public:
-    Participant() : isRegistered(false) {}
+    static int participantCount;  // Static variable to count the number of participants
+
+    Participant() : isRegistered(false) {
+        participantCount++;
+    }
+
+    ~Participant() {
+        participantCount--;
+    }
 
     void setParticipantID(const string& id) { this->participantID = id; }
     void setName(const string& n) { this->name = n; }
-    
-    void registerForEvent() {
-        if (!isRegistered) {
-            isRegistered = true;
-            totalParticipants++; // Increment the totalParticipants when a participant registers
-        }
-    }
+    void registerForEvent() { this->isRegistered = true; }
 
     string getParticipantID() const { return participantID; }
     string getName() const { return name; }
     bool getRegistrationStatus() const { return isRegistered; }
-
-    static int getTotalParticipants() { return totalParticipants; } // Static method to get the total number of registered participants
 };
 
-// Initialize the static variable
-int Participant::totalParticipants = 0;
+// Initialize static variable
+int Participant::participantCount = 0;
 
 int main() {
     Event* events = new Event[2];
@@ -77,8 +75,6 @@ int main() {
     events[1].setLocation("Main Auditorium");
     events[1].setEventID("EV02");
 
-    cout << "Total Events: " << Event::getTotalEvents() << endl << endl;
-
     for (int i = 0; i < 2; ++i) {
         cout << "Event " << (i + 1) << " Details:" << endl;
         cout << "ID: " << events[i].getEventID() << endl;
@@ -88,9 +84,9 @@ int main() {
         cout << endl;
     }
 
-    delete[] events;
+    cout << "Total Events: " << Event::eventCount << endl;
 
-    cout << "Total Events after deletion: " << Event::getTotalEvents() << endl << endl;
+    delete[] events;
 
     Participant* par1 = new Participant;
 
@@ -102,7 +98,7 @@ int main() {
     cout << "Name: " << par1->getName() << endl;
     cout << "Registered: " << (par1->getRegistrationStatus() ? "Yes" : "No") << endl;
 
-    cout << "Total Registered Participants: " << Participant::getTotalParticipants() << endl;
+    cout << "Total Participants: " << Participant::participantCount << endl;
 
     delete par1;
 
