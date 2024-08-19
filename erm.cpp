@@ -1,4 +1,4 @@
-#include <iostream>
+# include <iostream>
 using namespace std;
 
 class Event {
@@ -7,10 +7,20 @@ private:
     string name;
     string date;
     string location;
+
     static int totalEvents; 
 
+
 public:
+    static int eventCount;  // Static variable to count the number of events
+
     Event() {
+
+        eventCount++;
+    }
+
+    ~Event() {
+        eventCount--;
         totalEvents++; 
     }
 
@@ -27,6 +37,10 @@ public:
     string getName() const { return name; }
     string getDate() const { return date; }
     string getLocation() const { return location; }
+};
+
+// Initialize static variable
+int Event::eventCount = 0;
 
     static int getTotalEvents() { return totalEvents; } 
 };
@@ -39,13 +53,24 @@ private:
     string participantID;
     string name;
     bool isRegistered;
+
     static int totalParticipants; 
 
 public:
-    Participant() : isRegistered(false) {}
+    static int participantCount;  // Static variable to count the number of participants
+
+    Participant() : isRegistered(false) {
+        participantCount++;
+    }
+
+    ~Participant() {
+        participantCount--;
+    }
 
     void setParticipantID(const string& id) { this->participantID = id; }
     void setName(const string& n) { this->name = n; }
+
+    void registerForEvent() { this->isRegistered = true; }
     
     void registerForEvent() {
         if (!isRegistered) {
@@ -57,6 +82,10 @@ public:
     string getParticipantID() const { return participantID; }
     string getName() const { return name; }
     bool getRegistrationStatus() const { return isRegistered; }
+};
+
+// Initialize static variable
+int Participant::participantCount = 0;
 
     static int getTotalParticipants() { return totalParticipants; } 
 };
@@ -76,8 +105,6 @@ int main() {
     events[1].setLocation("Main Auditorium");
     events[1].setEventID("EV02");
 
-    cout << "Total Events: " << Event::getTotalEvents() << endl << endl;
-
     for (int i = 0; i < 2; ++i) {
         cout << "Event " << (i + 1) << " Details:" << endl;
         cout << "ID: " << events[i].getEventID() << endl;
@@ -87,9 +114,9 @@ int main() {
         cout << endl;
     }
 
-    delete[] events;
+    cout << "Total Events: " << Event::eventCount << endl;
 
-    cout << "Total Events after deletion: " << Event::getTotalEvents() << endl << endl;
+    delete[] events;
 
     Participant* par1 = new Participant;
 
@@ -101,7 +128,7 @@ int main() {
     cout << "Name: " << par1->getName() << endl;
     cout << "Registered: " << (par1->getRegistrationStatus() ? "Yes" : "No") << endl;
 
-    cout << "Total Registered Participants: " << Participant::getTotalParticipants() << endl;
+    cout << "Total Participants: " << Participant::participantCount << endl;
 
     delete par1;
 
