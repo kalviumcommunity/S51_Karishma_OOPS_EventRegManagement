@@ -1,4 +1,4 @@
-# include <iostream>
+#include <iostream>
 using namespace std;
 
 class Event {
@@ -12,7 +12,7 @@ private:
 
 
 public:
-    static int eventCount;  // Static variable to count the number of events
+    static int eventCount;  
 
     Event() {
 
@@ -37,9 +37,12 @@ public:
     string getName() const { return name; }
     string getDate() const { return date; }
     string getLocation() const { return location; }
+
+    static int getEventCount() {
+        return eventCount;
+    }
 };
 
-// Initialize static variable
 int Event::eventCount = 0;
 
     static int getTotalEvents() { return totalEvents; } 
@@ -57,7 +60,7 @@ private:
     static int totalParticipants; 
 
 public:
-    static int participantCount;  // Static variable to count the number of participants
+    static int participantCount;  
 
     Participant() : isRegistered(false) {
         participantCount++;
@@ -82,9 +85,12 @@ public:
     string getParticipantID() const { return participantID; }
     string getName() const { return name; }
     bool getRegistrationStatus() const { return isRegistered; }
+
+    static int getParticipantCount() {
+        return participantCount;
+    }
 };
 
-// Initialize static variable
 int Participant::participantCount = 0;
 
     static int getTotalParticipants() { return totalParticipants; } 
@@ -114,7 +120,7 @@ int main() {
         cout << endl;
     }
 
-    cout << "Total Events: " << Event::eventCount << endl;
+    cout << "Total Events: " << Event::getEventCount() << endl;
 
     delete[] events;
 
@@ -128,7 +134,7 @@ int main() {
     cout << "Name: " << par1->getName() << endl;
     cout << "Registered: " << (par1->getRegistrationStatus() ? "Yes" : "No") << endl;
 
-    cout << "Total Participants: " << Participant::participantCount << endl;
+    cout << "Total Participants: " << Participant::getParticipantCount() << endl;
 
     delete par1;
 
