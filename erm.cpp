@@ -10,15 +10,24 @@ private:
     string date;
     string location;
 
+    static int totalEvents; 
+
+
 public:
     static int eventCount;  
 
     Event() {
+
         eventCount++;
     }
 
     virtual ~Event() {
         eventCount--;
+        totalEvents++; 
+    }
+
+    ~Event() {
+        totalEvents--; 
     }
 
     // Mutators (Setters)
@@ -45,11 +54,20 @@ public:
 int Event::eventCount = 0;
 
 // Participant class
+
+    static int getTotalEvents() { return totalEvents; } 
+};
+
+
+int Event::totalEvents = 0;
+
 class Participant {
 private:
     string participantID;
     string name;
     bool isRegistered;
+
+    static int totalParticipants; 
 
 public:
     static int participantCount;  
@@ -65,7 +83,15 @@ public:
     // Mutators (Setters)
     void setParticipantID(const string& id) { this->participantID = id; }
     void setName(const string& n) { this->name = n; }
+
     void registerForEvent() { this->isRegistered = true; }
+    
+    void registerForEvent() {
+        if (!isRegistered) {
+            isRegistered = true;
+            totalParticipants++; 
+        }
+    }
 
     // Accessors (Getters)
     string getParticipantID() const { return participantID; }
@@ -84,6 +110,24 @@ class Hackathon : public Event {
 private:
     string sponsor;
     vector<Participant*> participants;
+    static int getTotalParticipants() { return totalParticipants; } 
+};
+
+int Participant::totalParticipants = 0;
+
+int main() {
+    Event* events = new Event[2];
+
+    // Using mutators to set event details
+    events[0].setEventID("EV01");
+    events[0].setName("Karishma's Event");
+    events[0].setDate("27-4-2024");
+    events[0].setLocation("Conference Hall");
+
+    events[1].setEventID("EV02");
+    events[1].setName("Tech Conference");
+    events[1].setDate("28-4-2024");
+    events[1].setLocation("Main Auditorium");
 
 public:
     Hackathon() : sponsor("") {}
