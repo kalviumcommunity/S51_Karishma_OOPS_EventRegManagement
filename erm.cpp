@@ -1,6 +1,8 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
+// Abstract class Event
 class Event {
 private:
     string eventID;
@@ -15,7 +17,7 @@ public:
         eventCount++;
     }
 
-    ~Event() {
+    virtual ~Event() {
         eventCount--;
     }
 
@@ -34,10 +36,15 @@ public:
     static int getEventCount() {
         return eventCount;
     }
+
+    // Virtual functions
+    virtual void showDetails() const = 0; 
+    virtual string getType() const = 0;   
 };
 
 int Event::eventCount = 0;
 
+// Participant class
 class Participant {
 private:
     string participantID;
@@ -72,49 +79,93 @@ public:
 
 int Participant::participantCount = 0;
 
-int main() {
-    Event* events = new Event[2];
+// Hackathon class inheriting from Event
+class Hackathon : public Event {
+private:
+    string sponsor;
+    vector<Participant*> participants;
 
-    // Using mutators to set event details
-    events[0].setEventID("EV01");
-    events[0].setName("Karishma's Event");
-    events[0].setDate("27-4-2024");
-    events[0].setLocation("Conference Hall");
+public:
+    Hackathon() : sponsor("") {}
 
-    events[1].setEventID("EV02");
-    events[1].setName("Tech Conference");
-    events[1].setDate("28-4-2024");
-    events[1].setLocation("Main Auditorium");
+    // Override 
+    void showDetails() const override {
+        cout << "Hackathon Details:" << endl;
+        cout << "ID: " << getEventID() << endl;
+        cout << "Name: " << getName() << endl;
+        cout << "Date: " << getDate() << endl;
+        cout << "Location: " << getLocation() << endl;
+        cout << "Sponsor: " << sponsor << endl;
+        cout << "Participants:" << endl;
 
-    // Using accessors to get event details
-    for (int i = 0; i < 2; ++i) {
-        cout << "Event " << (i + 1) << " Details:" << endl;
-        cout << "ID: " << events[i].getEventID() << endl;
-        cout << "Name: " << events[i].getName() << endl;
-        cout << "Date: " << events[i].getDate() << endl;
-        cout << "Location: " << events[i].getLocation() << endl;
+        for (const auto& participant : participants) {
+            cout << "  ID: " << participant->getParticipantID() << ", Name: " << participant->getName() << endl;
+        }
         cout << endl;
     }
 
-    cout << "Total Events: " << Event::getEventCount() << endl;
+    // Override 
+    string getType() const override {
+        return "Hackathon";
+    }
 
-    delete[] events;
+    // Mutators (Setters)
+    void setSponsor(const string& sp) { this->sponsor = sp; }
 
+    // Accessors (Getters)
+    string getSponsor() const { return sponsor; }
+
+    // Manage participants
+    void addParticipant(Participant* p) {
+        participants.push_back(p);
+    }
+};
+
+int main() {
+    Hackathon* hackathons = new Hackathon[2];
+
+    // Using mutators to set hackathon details
+    hackathons[0].setEventID("HK01");
+    hackathons[0].setName("Code Masters");
+    hackathons[0].setDate("15-5-2024");
+    hackathons[0].setLocation("Tech Park");
+    hackathons[0].setSponsor("Tech Corp");
+
+    hackathons[1].setEventID("HK02");
+    hackathons[1].setName("Innovate 2024");
+    hackathons[1].setDate("16-5-2024");
+    hackathons[1].setLocation("Innovation Center");
+    hackathons[1].setSponsor("Innovate Inc.");
+
+    // Creating participants
     Participant* par1 = new Participant;
-
-    // Using mutators to set participant details
     par1->setParticipantID("P01");
     par1->setName("Karishma");
     par1->registerForEvent();
 
-    // Using accessors to get participant details
-    cout << "Participant ID: " << par1->getParticipantID() << endl;
-    cout << "Name: " << par1->getName() << endl;
-    cout << "Registered: " << (par1->getRegistrationStatus() ? "Yes" : "No") << endl;
+    Participant* par2 = new Participant;
+    par2->setParticipantID("P02");
+    par2->setName("John");
+    par2->registerForEvent();
 
+    // Adding participants to hackathons
+    hackathons[0].addParticipant(par1);
+    hackathons[0].addParticipant(par2);
+
+    hackathons[1].addParticipant(par2);
+
+    // Using accessors and overridden methods to get hackathon details
+    for (int i = 0; i < 2; ++i) {
+        hackathons[i].showDetails();
+        cout << "Type: " << hackathons[i].getType() << endl;
+    }
+
+    cout << "Total Events: " << Event::getEventCount() << endl;
     cout << "Total Participants: " << Participant::getParticipantCount() << endl;
 
     delete par1;
+    delete par2;
+    delete[] hackathons;
 
     return 0;
 }
