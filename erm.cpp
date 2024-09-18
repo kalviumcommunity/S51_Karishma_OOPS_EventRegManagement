@@ -11,7 +11,14 @@ private:
 public:
     static int eventCount;  
 
+    // Default constructor
     Event() {
+        eventCount++;
+    }
+
+    // Parameterized constructor
+    Event(const string& id, const string& n, const string& d, const string& loc) 
+        : eventID(id), name(n), date(d), location(loc) {
         eventCount++;
     }
 
@@ -47,7 +54,14 @@ private:
 public:
     static int participantCount;  
 
+    // Default constructor
     Participant() : isRegistered(false) {
+        participantCount++;
+    }
+
+    // Parameterized constructor
+    Participant(const string& id, const string& n, bool reg = false) 
+        : participantID(id), name(n), isRegistered(reg) {
         participantCount++;
     }
 
@@ -73,20 +87,11 @@ public:
 int Participant::participantCount = 0;
 
 int main() {
-    Event* events = new Event[2];
+    Event events[2] = {
+        Event("EV01", "Karishma's Event", "27-4-2024", "Conference Hall"),
+        Event("EV02", "Tech Conference", "28-4-2024", "Main Auditorium")
+    };
 
-    // Using mutators to set event details
-    events[0].setEventID("EV01");
-    events[0].setName("Karishma's Event");
-    events[0].setDate("27-4-2024");
-    events[0].setLocation("Conference Hall");
-
-    events[1].setEventID("EV02");
-    events[1].setName("Tech Conference");
-    events[1].setDate("28-4-2024");
-    events[1].setLocation("Main Auditorium");
-
-    // Using accessors to get event details
     for (int i = 0; i < 2; ++i) {
         cout << "Event " << (i + 1) << " Details:" << endl;
         cout << "ID: " << events[i].getEventID() << endl;
@@ -98,16 +103,10 @@ int main() {
 
     cout << "Total Events: " << Event::getEventCount() << endl;
 
-    delete[] events;
+    Participant* par1 = new Participant("P01", "Karishma");
 
-    Participant* par1 = new Participant;
-
-    // Using mutators to set participant details
-    par1->setParticipantID("P01");
-    par1->setName("Karishma");
     par1->registerForEvent();
 
-    // Using accessors to get participant details
     cout << "Participant ID: " << par1->getParticipantID() << endl;
     cout << "Name: " << par1->getName() << endl;
     cout << "Registered: " << (par1->getRegistrationStatus() ? "Yes" : "No") << endl;
