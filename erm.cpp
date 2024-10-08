@@ -9,7 +9,7 @@ private:
     string location;
 
 public:
-    static int eventCount;  
+    static int eventCount;
 
     Event() { eventCount++; }
 
@@ -19,6 +19,8 @@ public:
     }
 
     virtual ~Event() { eventCount--; }
+
+    virtual void displayDetails() const = 0;  // Pure virtual function
 
     void setEventID(const string& id) { this->eventID = id; }
     void setName(const string& n) { this->name = n; }
@@ -43,19 +45,26 @@ public:
     SportsEvent(const string& id, const string& n, const string& d, const string& loc, const string& type) 
         : Event(id, n, d, loc), sportType(type) {}
 
+    void displayDetails() const override {
+        cout << "Sports Event Details:" << endl;
+        cout << "ID: " << getEventID() << endl;
+        cout << "Name: " << getName() << endl;
+        cout << "Date: " << getDate() << endl;
+        cout << "Location: " << getLocation() << endl;
+        cout << "Sport Type: " << sportType << endl;
+    }
+
     void setSportType(const string& type) { sportType = type; }
     string getSportType() const { return sportType; }
 };
 
 int main() {
-    SportsEvent sportsEvent("SE01", "Football Match", "29-4-2024", "Stadium", "Football");
-    cout << "Event ID: " << sportsEvent.getEventID() << endl;
-    cout << "Name: " << sportsEvent.getName() << endl;
-    cout << "Date: " << sportsEvent.getDate() << endl;
-    cout << "Location: " << sportsEvent.getLocation() << endl;
-    cout << "Sport Type: " << sportsEvent.getSportType() << endl;
+    Event* event = new SportsEvent("SE02", "Basketball Game", "30-4-2024", "Gymnasium", "Basketball");
+    event->displayDetails();
 
     cout << "Total Events: " << Event::getEventCount() << endl;
+
+    delete event;
 
     return 0;
 }
