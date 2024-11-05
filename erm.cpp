@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class Event {
@@ -90,43 +91,41 @@ class Participant {
 private:
     string participantID;
     string name;
-    bool isRegistered;
 
 public:
-    static int participantCount;
-
-    // Default constructor
-    Participant() : isRegistered(false) {
-        participantCount++;
-    }
-
-    // Parameterized constructor
-    Participant(const string& id, const string& n, bool reg = false) 
-        : participantID(id), name(n), isRegistered(reg) {
-        participantCount++;
-    }
-
-    // Destructor
-    ~Participant() {
-        participantCount--;
-    }
-
-    // Mutators (Setters)
-    void setParticipantID(const string& id) { this->participantID = id; }
-    void setName(const string& n) { this->name = n; }
-    void registerForEvent() { this->isRegistered = true; }
+    Participant(const string& id, const string& n) 
+        : participantID(id), name(n) {}
 
     // Accessors (Getters)
     string getParticipantID() const { return participantID; }
     string getName() const { return name; }
-    bool getRegistrationStatus() const { return isRegistered; }
+};
 
-    static int getParticipantCount() {
-        return participantCount;
+class ParticipantManager {
+private:
+    vector<Participant*> participants;
+    static int participantCount;
+
+public:
+    void addParticipant(Participant* participant) {
+        participants.push_back(participant);
+        participantCount++;
+    }
+
+    void registerParticipant(Participant* participant) {
+        cout << "Participant " << participant->getName() << " registered successfully." << endl;
+    }
+
+    static int getParticipantCount() { return participantCount; }
+
+    ~ParticipantManager() {
+        for (Participant* p : participants) {
+            delete p;
+        }
     }
 };
 
-int Participant::participantCount = 0;
+int ParticipantManager::participantCount = 0;
 
 int main() {
     // Creating an array of Event pointers to demonstrate polymorphism
@@ -148,16 +147,14 @@ int main() {
         delete events[i];
     }
 
-    // Participant example
+    // Participant and ParticipantManager example
+    ParticipantManager manager;
     Participant* par1 = new Participant("P01", "Karishma");
-    par1->registerForEvent();
+    manager.addParticipant(par1);
+    manager.registerParticipant(par1);
     cout << "Participant ID: " << par1->getParticipantID() << endl;
     cout << "Name: " << par1->getName() << endl;
-    cout << "Registered: " << (par1->getRegistrationStatus() ? "Yes" : "No") << endl;
-    cout << "Total Participants: " << Participant::getParticipantCount() << endl;
-
-    // Clean up dynamically allocated memory for Participant
-    delete par1;
+    cout << "Total Participants: " << ParticipantManager::getParticipantCount() << endl;
 
     return 0;
 }
