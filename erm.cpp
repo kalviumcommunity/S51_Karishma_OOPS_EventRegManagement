@@ -1,6 +1,36 @@
 #include <iostream>
-#include <vector>
+#include <memory>
 using namespace std;
+
+class EventDetails {
+public:
+    virtual void displaySpecificDetails() const = 0;
+    virtual ~EventDetails() = default;
+};
+
+class SportsDetails : public EventDetails {
+private:
+    string sportType;
+
+public:
+    SportsDetails(const string& type) : sportType(type) {}
+
+    void displaySpecificDetails() const override {
+        cout << "Sport Type: " << sportType << endl;
+    }
+};
+
+class CulturalDetails : public EventDetails {
+private:
+    string theme;
+
+public:
+    CulturalDetails(const string& t) : theme(t) {}
+
+    void displaySpecificDetails() const override {
+        cout << "Theme: " << theme << endl;
+    }
+};
 
 class Event {
 private:
@@ -8,84 +38,34 @@ private:
     string name;
     string date;
     string location;
+    unique_ptr<EventDetails> details;
 
 public:
     static int eventCount;
 
-    // Default constructor
-    Event() { eventCount++; }
-
     // Parameterized constructor
-    Event(const string& id, const string& n, const string& d, const string& loc) 
-        : eventID(id), name(n), date(d), location(loc) {
+    Event(const string& id, const string& n, const string& d, const string& loc, unique_ptr<EventDetails> det) 
+        : eventID(id), name(n), date(d), location(loc), details(move(det)) {
         eventCount++;
     }
 
     // Destructor
     virtual ~Event() { eventCount--; }
 
-    // Pure virtual function making Event an abstract class
-    virtual void displayDetails() const = 0;
-
-    // Mutators (Setters)
-    void setEventID(const string& id) { this->eventID = id; }
-    void setName(const string& n) { this->name = n; }
-    void setDate(const string& d) { this->date = d; }
-    void setLocation(const string& loc) { this->location = loc; }
-
-    // Accessors (Getters)
-    string getEventID() const { return eventID; }
-    string getName() const { return name; }
-    string getDate() const { return date; }
-    string getLocation() const { return location; }
+    // Display event details
+    void displayDetails() const {
+        cout << "Event ID: " << eventID << endl;
+        cout << "Name: " << name << endl;
+        cout << "Date: " << date << endl;
+        cout << "Location: " << location << endl;
+        details->displaySpecificDetails();  // Display specific event type details
+    }
 
     // Static function to get the total count of events
     static int getEventCount() { return eventCount; }
 };
 
 int Event::eventCount = 0;
-
-class SportsEvent : public Event {
-private:
-    string sportType;
-
-public:
-    SportsEvent(const string& id, const string& n, const string& d, const string& loc, const string& type) 
-        : Event(id, n, d, loc), sportType(type) {}
-
-    void displayDetails() const override {
-        cout << "Sports Event Details:" << endl;
-        cout << "ID: " << getEventID() << endl;
-        cout << "Name: " << getName() << endl;
-        cout << "Date: " << getDate() << endl;
-        cout << "Location: " << getLocation() << endl;
-        cout << "Sport Type: " << sportType << endl;
-    }
-
-    void setSportType(const string& type) { sportType = type; }
-    string getSportType() const { return sportType; }
-};
-
-class CulturalEvent : public Event {
-private:
-    string theme;
-
-public:
-    CulturalEvent(const string& id, const string& n, const string& d, const string& loc, const string& t) 
-        : Event(id, n, d, loc), theme(t) {}
-
-    void displayDetails() const override {
-        cout << "Cultural Event Details:" << endl;
-        cout << "ID: " << getEventID() << endl;
-        cout << "Name: " << getName() << endl;
-        cout << "Date: " << getDate() << endl;
-        cout << "Location: " << getLocation() << endl;
-        cout << "Theme: " << theme << endl;
-    }
-
-    void setTheme(const string& t) { theme = t; }
-    string getTheme() const { return theme; }
-};
 
 class Participant {
 private:
@@ -128,24 +108,18 @@ public:
 int ParticipantManager::participantCount = 0;
 
 int main() {
-    // Creating an array of Event pointers to demonstrate polymorphism
-    Event* events[2];
-    events[0] = new SportsEvent("SE03", "Tennis Match", "1-5-2024", "Court A", "Tennis");
-    events[1] = new CulturalEvent("CE01", "Art Exhibition", "2-5-2024", "Art Hall", "Modern Art");
+    // Creating different types of events using the open/closed principle
+    Event event1("SE03", "Tennis Match", "1-5-2024", "Court A", make_unique<SportsDetails>("Tennis"));
+    Event event2("CE01", "Art Exhibition", "2-5-2024", "Art Hall", make_unique<CulturalDetails>("Modern Art"));
 
     // Display details for each event
-    for (int i = 0; i < 2; ++i) {
-        events[i]->displayDetails();
-        cout << endl;
-    }
+    event1.displayDetails();
+    cout << endl;
+    event2.displayDetails();
+    cout << endl;
 
     // Display total number of events
     cout << "Total Events: " << Event::getEventCount() << endl;
-
-    // Clean up dynamically allocated memory
-    for (int i = 0; i < 2; ++i) {
-        delete events[i];
-    }
 
     // Participant and ParticipantManager example
     ParticipantManager manager;
